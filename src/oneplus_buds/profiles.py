@@ -63,6 +63,12 @@ PRO_2_EQ_PRESETS = (
     EqPresetProfile(7, "hans-zimmer-soundscape-tuning", "Hans Zimmer Soundscape Tuning"),
 )
 
+BUDS_4_EQ_PRESETS = (
+    EqPresetProfile(0, "balanced", "Balanced"),
+    EqPresetProfile(1, "serenade", "Serenade"),
+    EqPresetProfile(2, "bass", "Bass"),
+)
+
 
 @dataclass(frozen=True)
 class DeviceProfile:
@@ -127,6 +133,45 @@ PROFILES = {
         ),
         eq=EqProfile(PRO_2_EQ_PRESETS, supports_custom=True, write_verified=True,
                      custom_write_verified=True),
+        capabilities=frozenset(
+            {
+                "battery",
+                "case_battery",
+                "firmware",
+                "anc",
+                "transparency",
+                "anc_levels",
+                "smart_anc",
+                "eq",
+                "custom_eq",
+            }
+        ),
+        compatibility="verified",
+    ),
+    "065414": DeviceProfile(
+        product_id="065414",
+        name="OnePlus Buds 4",
+        service_uuid="0000079a-d102-11e1-9b23-00025b00a5a5",
+        anc=AncProfile(
+            write_indices={
+                "off": 0,
+                "on": 1,
+                "transparency": 2,
+                "deep": 4,
+                "medium": 5,
+                "light": 6,
+                "smart": 7,
+            },
+            read_modes={0: "off", 1: "on", 2: "transparency", 3: "off", 8: "transparency", 11: "on"},
+            read_levels={4: "deep", 5: "medium", 6: "light", 7: "smart", 11: "smart"},
+            sequences={"off": 0x40},
+        ),
+        eq=EqProfile(
+            BUDS_4_EQ_PRESETS,
+            supports_custom=True,
+            write_verified=True,
+            custom_write_verified=True,
+        ),
         capabilities=frozenset(
             {
                 "battery",

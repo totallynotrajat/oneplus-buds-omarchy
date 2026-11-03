@@ -70,10 +70,11 @@ class BridgeTests(unittest.TestCase):
     def test_only_two_reference_models_are_hardware_verified(self):
         self.assertEqual(PROFILES["060C14"].compatibility, "verified")
         self.assertEqual(PROFILES["062014"].compatibility, "verified")
+        self.assertEqual(PROFILES["065414"].compatibility, "verified")
         self.assertFalse(any(
             profile.compatibility == "verified"
             for product_id, profile in PROFILES.items()
-            if product_id not in {"060C14", "062014"}
+            if product_id not in {"060C14", "062014", "065414"}
         ))
 
     def test_unknown_recognised_product_is_experimental(self):
