@@ -274,9 +274,11 @@ class BudsController:
         self._ignored_frames += batch.ignored_frames
         for event in batch.events:
             if event.kind == "battery" and self._status is not None:
+                updated_battery = dict(self._status.battery or {})
+                updated_battery.update(cast(dict[str, dict[str, int | bool]], event.data))
                 self._status = replace(
                     self._status,
-                    battery=cast(dict[str, dict[str, int | bool]], event.data),
+                    battery=updated_battery,
                 )
             elif event.kind == "anc" and self._status is not None:
                 self._status = replace(
