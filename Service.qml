@@ -11,6 +11,7 @@ Item {
   property int nextRequestId: 1
   property bool stopping: false
   property var lifecycleObservations: []
+  property int restartDelay: 2000
 
   function observeLifecycle(phase, productId) {
     lifecycleObservations = lifecycleObservations.concat([{
@@ -104,6 +105,14 @@ Item {
     helper.running = false
   }
 
+  Timer {
+    id: restartTimer
+    repeat: false
+    onTriggered: root.startHelper()
+  }
+
+  onConnectionChanged: if (connection === "connected") restartDelay = 2000
+
   Process {
     id: helper
     stdinEnabled: true
@@ -114,7 +123,8 @@ Item {
     }
 
     stderr: SplitParser {
-      onRead: function(_line) {
+      onRead: function(line) {
+        console.warn("oneplus-buds bridge: " + line)
         root.state = {
           connection: root.state.connection,
           snapshot: root.state.snapshot,
@@ -124,8 +134,13 @@ Item {
       }
     }
 
-    onExited: function(_exitCode) {
+    onExited: function(exitCode) {
       if (!root.stopping) {
+        console.warn("oneplus-buds bridge exited with code " + exitCode
+          + "; restarting in " + root.restartDelay + "ms")
+        restartTimer.interval = root.restartDelay
+        root.restartDelay = Math.min(root.restartDelay * 2, 60000)
+        restartTimer.restart()
         root.state = {
           connection: "stopped",
           snapshot: root.state.snapshot,

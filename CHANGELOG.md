@@ -2,6 +2,9 @@
 
 ## Unreleased — 0.1.0 release candidate
 
+- Restart the backend bridge with exponential backoff (2s up to 60s) when it
+  exits unexpectedly, and log its stderr, instead of leaving the bar stuck on
+  "Stopped" until the shell restarts.
 - Distinguish Verified, Community Tested and Experimental device evidence in the
   backend and panel; only Buds Pro and Buds Pro 2 remain hardware-verified.
 - Add a compact experimental-device notice and user-controlled compatibility
